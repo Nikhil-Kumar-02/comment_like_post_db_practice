@@ -51,9 +51,29 @@ const getAllComment = async (req,res) => {
     }
 }
 
+const updateComment = async (req,res) => {
+    try {
+        const commentid = req.params.commentid;
+        const {user , body} = req.body;
+        console.log(commentid , {user , body});
+        const result = await Comment.findByIdAndUpdate({_id : commentid} , {user,body} , {new : true});
+        console.log(result)
+        res.status(200).json({
+            message : 'data updated in db',
+            data : result
+        })
+    } catch (error) {
+        res.status(400).json({
+            message : "data not fetched from db",
+            description : error
+        })
+    }
+}
+
 
 module.exports = {
     addComment,
     getAllComment,
-    getCommentByid
+    getCommentByid,
+    updateComment
 };
