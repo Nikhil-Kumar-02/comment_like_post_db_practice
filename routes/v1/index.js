@@ -1,8 +1,8 @@
 const express = require('express');
-const dummylink = require('../../controller/commentController');
+const addComment = require('../../controller/commentController');
 const router = express.Router();
 
-router.get('/dummy' , dummylink);
+router.post('/comment' , addComment);
 
 
 module.exports = router;
