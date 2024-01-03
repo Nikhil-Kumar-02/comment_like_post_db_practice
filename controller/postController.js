@@ -38,7 +38,7 @@ const getPostByid = async (req,res) => {
 
 const getAllPost = async (req,res) => {
     try {
-        const result = await Post.find({}).populate('likes');
+        const result = await Post.find({}).populate('likes').populate('comments');
         res.status(200).json({
             message : 'data fetched from db',
             data : result
