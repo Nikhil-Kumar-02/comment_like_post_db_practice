@@ -31,18 +31,23 @@ const addLike = async (req,res) => {
 const removeLike = async (req,res) => {
     try {
         //i will get the postid from which recieved like id has to be removed
-        const commentid = req.params.commentid;
-        const {user , body} = req.body;
-        console.log(commentid , {user , body});
-        const result = await Like.findByIdAndUpdate({_id : commentid} , {user,body} , {new : true});
-        console.log(result)
+        const postid = req.body.postid;
+        const likeid = req.body.likeid;
+        //find the target post and then from the target post remove the incoming like recieved
+        const targetPost = await Post.findById(postid);
+        const newLikesArr = targetPost.likes.filter((ele) => {
+            return ele != likeid;
+        })
+        targetPost.likes = newLikesArr;
+        const response = await targetPost.save();
+        console.log(response)
         res.status(200).json({
             message : 'data updated in db',
-            data : result
+            data : response
         })
     } catch (error) {
         res.status(400).json({
-            message : "data not fetched from db",
+            message : "data not updated from db",
             description : error
         })
     }
