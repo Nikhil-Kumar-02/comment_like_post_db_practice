@@ -1,16 +1,25 @@
 const Comment = require('../models/comment');
+const Post = require('../models/post');
 
 const addComment = async (req,res) => {
     try {
-        const data = {
-            "user" : req.body.user,
-            "body" : req.body.body
-        }
-        console.log('this is the input created' , data);
-        const result = await Comment.create(data);
+            console.log(req.body);
+            const user =  req.body.user;
+            const body = req.body.body;
+            const postid = req.body.postid;
+
+            //find the post on which you want to comment on
+            //then add this comment to that post
+            const targetPost = await Post.findById(postid);
+            console.log('target post',targetPost);
+            const result = await Comment.create({user , body , post : postid});
+            console.log('created comment',result);
+            targetPost.comments.push(result._id);
+            const result1 = await targetPost.save();            
+            console.log('final result after adding to the comments array' , result);
         res.status(200).json({
             message : 'data inserted sucessfully into db',
-            data : result
+            data : result1
         })
     } catch (error) {
         res.status(400).json({
